@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>com.team1640.hotkey.action.pi</title>
+	<link rel="stylesheet" href="../../css/sdpi.css">
+	<script src="js/pi.js"></script>
+</head>
+
+<body>
+	<div class="sdpi-wrapper hidden">
+		<div class="sdpi-heading">SETTINGS</div>
+
+		<div class="sdpi-item" title="This field lets you enter a unique number that will correspond to a robot function in your robot code. Check the FRC Deck documentation for more details.">
+			<div class="sdpi-item-label">Function ID</div>
+			<input
+			class="sdpi-item-value"
+			id="functionID"
+			value=""
+			inputmode="numeric"
+			type="number"
+			placeholder="e.g. 5"
+			pattern="d{4}"
+			onchange="updateSettings()"
+			required>
+		</div>
+	</div>
+</body>
+
+</html>
