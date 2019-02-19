@@ -47,7 +47,7 @@
 		], 
 		"SupportedInMultiActions": false,
 		"Tooltip": "Trigger a single event on the robot", 
-		"UUID": "com.team1640.event.action",
+		"UUID": "com.team1640.hotkey.action",
 		"PropertyInspectorPath": "actions/hotkey/pi.html"
 	}
   ],
