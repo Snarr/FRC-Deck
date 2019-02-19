@@ -1,45 +1,37 @@
+class RobotSocket {
+	ip = "";
+	port = 0;
+	socket;
 
-  var wsUri;
-  var output;
-  var robotSocket;
+	constructor(ip, port) {
+		this.ip = ip;
+		this.port = port;
+		this.socket = new WebSocket(`ws://${ip}:${port}/socket`);
+		this.socket.onopen = this.onOpen
+		this.socket.onclose = this.onClose
+		this.socket.onmessage = this.onMessage
+		this.socket.onerror = this.onError
+	}
 
-  function init()
-  {
-  }
+	static onOpen(evt) {
+		console.log(`onOpen: ${JSON.stringify(evt)}`);
+	}
+	
+	static onClose(evt) {
+		console.log(`onClose: ${JSON.stringify(evt)}`);
+	}
 
-  function runWebSocket(ip, port)
-  {
-    robotSocket = new WebSocket(`ws://${ip}:${port}/socket`);
-    robotSocket.onopen = function(evt) { onOpen(evt) };
-    robotSocket.onclose = function(evt) { onClose(evt) };
-    robotSocket.onmessage = function(evt) { onMessage(evt) };
-    robotSocket.onerror = function(evt) { onError(evt) };
-  }
+	static onMessage(evt) {
+	  console.log(`onMessage: ${JSON.stringify(evt)}`);
+	  this.socket.close();
+	}
 
-  function onOpen(evt)
-  {
-	console.log(`onOpen: ${JSON.stringify(evt)}`);
-    doSend("WebSocket rocks");
-  }
+	static onError(evt) {
+		console.log(`onError: ${JSON.stringify(evt)}`);
+  	}
 
-  function onClose(evt)
-  {
-	console.log(`onClose: ${JSON.stringify(evt)}`);
-  }
-
-  function onMessage(evt)
-  {
-	console.log(`onMessage: ${JSON.stringify(evt)}`);
-    websocket.close();
-  }
-
-  function onError(evt)
-  {
-	console.log(`onError: ${JSON.stringify(evt)}`);
-  }
-
-  function doSend(message)
-  {
-	console.log(`doSend: ${message}`);
-    websocket.send(message);
-  }
+	static doSend(message) {
+		console.log(`doSend: ${message}`);
+    	this.socket.send(message);
+  	}
+}

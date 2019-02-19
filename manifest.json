@@ -58,7 +58,7 @@
   "Category": "FRC Deck",
   "Icon": "images/pluginIcon",
   "URL": "http://team1640.com",
-  "Version": "1.0",
+  "Version": "0.1.1",
   "OS": [
     {
       "Platform": "mac",

@@ -2,86 +2,8 @@ var websocket = null;
 var pluginUUID = null;
 var settingsCache = {};
 
-actions = {
-	"com.team1640.connect.action": {
-		onKeyDown: function (context, settings, coordinates, userDesiredState) {
-			let ip,
-				port;
+let robotSocket;
 
-			if(settings["ip"] != null) {
-				ip = settings["ip"];
-			}
-			if(settings["port"] != null){
-				port = settings["port"];
-			}
-			if(!ip || !port) {
-				this.ShowReaction(context, "Alert");
-			} else {
-				runWebSocket(ip, port);
-			}
-		},
-
-		onKeyUp: function (context, settings, coordinates, userDesiredState) {
-		},
-
-		onWillAppear: function (context, settings, coordinates) {
-			settingsCache[context] = settings;
-		},
-
-		onDeviceDidConnect: function (context, settings, coordinates) {
-			settingsCache[context] = settings;
-		},
-		
-		ShowReaction : function(context, type) {
-			const json = {
-				"event": "show" + type,
-				"context": context,
-			};
-			websocket.send(JSON.stringify(json));
-		},
-	
-		SetSettings : function(context, settings) {
-			const json = {
-				"event": "setSettings",
-				"context": context,
-				"payload": settings
-			};
-			websocket.send(JSON.stringify(json));
-		},
-	
-		SendSettings : function(action, context) {
-			const json = {
-				"action": action,
-				"event": "sendToPropertyInspector",
-				"context": context,
-				"payload": settingsCache[context]
-			};
-	
-			websocket.send(JSON.stringify(json));
-		}
-	},
-	"com.team1640.hotkey.action": {
-		onKeyDown: function (context, settings, coordinates, userDesiredState) {
-		},
-	
-		onKeyUp: function (context, settings, coordinates, userDesiredState) {
-		},
-	
-		onWillAppear: function (context, settings, coordinates) {
-		},
-	},
-	"com.team1640.toggle.action": {
-		onKeyDown: function (context, settings, coordinates, userDesiredState) {
-		},
-	
-		onKeyUp: function (context, settings, coordinates, userDesiredState) {
-		},
-	
-		onWillAppear: function (context, settings, coordinates) {
-		},
-	}
-}
-/*
 const connectAction = {
 
     type : "com.team1640.connect.action",
@@ -97,10 +19,11 @@ const connectAction = {
             port = settings["port"];
         }
         if(!ip || !port) {
-            this.ShowReaction(context, "Alert")
+            this.ShowReaction(context, "Alert");
         } else {
-			this.ShowReaction(context, "Worked")
-        }
+			this.ShowReaction(context, "Worked");
+			robotSocket = new RobotSocket("10.16.40.2", 5802);
+		}
 
     },
 
@@ -137,12 +60,18 @@ const connectAction = {
     }
 };
 
-
 const hotkeyAction = {
 
     type : "com.team1640.hotkey.action",
 
     onKeyUp : function(context, settings, coordinates, userDesiredState) {
+		// if (robotSocket != undefined) {
+		// 	data = {
+		// 		"number": settings["functionID"]
+		// 	}
+
+		// 	robotSocket.doSend(JSON.stringify(data));
+		// }
     },
 
     onWillAppear : function(context, settings, coordinates) {
@@ -217,7 +146,7 @@ const toggleAction = {
         websocket.send(JSON.stringify(json));
     }
 };
-*/
+
 function connectSocket(inPort, inPluginUUID, inRegisterEvent, inInfo)
 {
     pluginUUID = inPluginUUID;
@@ -249,8 +178,16 @@ function connectSocket(inPort, inPluginUUID, inRegisterEvent, inInfo)
         const action = jsonObj['action'];
         const context = jsonObj['context'];
 		const jsonPayload = jsonObj['payload'];
+		let selectedAction;
 
-		selectedAction = actions[action]
+		switch(action) {
+			case "com.team1640.connect.action":
+				selectedAction = connectAction;
+			case "com.team1640.toggle.action":
+				selectedAction = toggleAction;
+			case "com.team1640.hotkey.action":
+				selectedAction = hotkeyAction;
+		}
 
         if(event == "keyUp")
         {
