@@ -1,4 +1,4 @@
-# FRC Streamdeck Plugin
+# FRC Deck
 
 <p align="center">
   <img src="https://github.com/Snarr/FRC-Streamdeck-Plugin/blob/master/images/pluginIcon@2x.png?raw=true" width=100 />
