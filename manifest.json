@@ -56,6 +56,7 @@
   "Description": "FRC Deck allows you to communicate to your FRC Robot using an Elgato StreamDeck",
   "Name": "FRC Deck",
   "Category": "FRC Deck",
+  "CategoryIcon": "images/pluginIcon",
   "Icon": "images/pluginIcon",
   "URL": "http://team1640.com",
   "Version": "0.2.0",
