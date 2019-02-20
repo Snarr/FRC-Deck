@@ -3,6 +3,8 @@ var pluginUUID = null;
 var settingsCache = {};
 
 let robotSocket;
+let robotSocketOn = false;
+let toggleActionState = false;
 
 const connectAction = {
 
@@ -21,8 +23,16 @@ const connectAction = {
         if(!ip || !port) {
             this.ShowReaction(context, "Alert");
         } else {
-			this.ShowReaction(context, "Worked");
-			robotSocket = new RobotSocket("10.16.40.2", 5802);
+			// this.ShowReaction(context, "Worked");
+			// robotSocket = new RobotSocket("10.16.40.2", 5802);
+			robotSocket = new WebSocket(`ws://${ip}:${port}/socket`);
+
+			robotSocket.onopen = function(evt) {
+				robotSocketOn = true;
+			};
+			robotSocket.onclose = function(evt) {
+				robotSocketOn = false;
+			}
 		}
 
     },
@@ -65,13 +75,9 @@ const hotkeyAction = {
     type : "com.team1640.hotkey.action",
 
     onKeyUp : function(context, settings, coordinates, userDesiredState) {
-		// if (robotSocket != undefined) {
-		// 	data = {
-		// 		"number": settings["functionID"]
-		// 	}
-
-		// 	robotSocket.doSend(JSON.stringify(data));
-		// }
+		if (robotSocketOn) {
+			robotSocket.send(JSON.stringify(settings));
+		}
     },
 
     onWillAppear : function(context, settings, coordinates) {
@@ -112,6 +118,19 @@ const toggleAction = {
     type : "com.team1640.toggle.action",
 
     onKeyUp : function(context, settings, coordinates, userDesiredState) {
+		if (robotSocketOn) {
+			let newSettings;
+			if (toggleActionState) {
+				newSettings = {
+					"functionID": settings["onFunctionID"]
+				}
+			} else {
+				newSettings = {
+					"functionID": settings["offFunctionID"]
+				}
+			}
+			robotSocket.send(newSettings);
+		}
     },
 
     onWillAppear : function(context, settings, coordinates) {
@@ -147,6 +166,7 @@ const toggleAction = {
     }
 };
 
+
 function connectSocket(inPort, inPluginUUID, inRegisterEvent, inInfo)
 {
     pluginUUID = inPluginUUID;
@@ -177,16 +197,24 @@ function connectSocket(inPort, inPluginUUID, inRegisterEvent, inInfo)
         const event = jsonObj['event'];
         const action = jsonObj['action'];
         const context = jsonObj['context'];
-		const jsonPayload = jsonObj['payload'];
+        const jsonPayload = jsonObj['payload'];
+
 		let selectedAction;
 
 		switch(action) {
 			case "com.team1640.connect.action":
 				selectedAction = connectAction;
+				break
 			case "com.team1640.toggle.action":
 				selectedAction = toggleAction;
+				break
 			case "com.team1640.hotkey.action":
 				selectedAction = hotkeyAction;
+				break
+		}
+		
+		if(selectedAction == undefined) {
+			return
 		}
 
         if(event == "keyUp")
