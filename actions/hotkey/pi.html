@@ -12,14 +12,17 @@
 	<div class="sdpi-wrapper hidden">
 		<div class="sdpi-heading">SETTINGS</div>
 
-		<div class="sdpi-item" title="This field lets you enter a unique number that will correspond to a robot function in your robot code. Check the FRC Deck documentation for more details.">
-			<div class="sdpi-item-label">Function ID</div>
+		<div class="sdpi-item" title="This field lets you enter an integer number that will correspond to a robot function in your robot code. Check the FRC Deck documentation for more details.">
+			<div class="sdpi-item-label">Task ID</div>
 			<input
 			class="sdpi-item-value"
 			id="functionID"
 			value=""
 			inputmode="numeric"
 			type="number"
+			min="0"
+			max="9999"
+			step="1"
 			placeholder="e.g. 5"
 			pattern="d{4}"
 			onchange="updateSettings()"
