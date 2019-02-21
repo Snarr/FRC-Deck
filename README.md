@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/version-v0.2.0-green.svg?style=flat" alt="Version">
+    <img src="https://img.shields.io/badge/version-v0.3.0-green.svg?style=flat" alt="Version">
     <img src="https://img.shields.io/github/license/Snarr/FRC-Streamdeck-Plugin.svg?style=flat" alt="Liscense" />
     <img src="https://img.shields.io/github/repo-size/Snarr/FRC-Streamdeck-Plugin.svg?style=flat" alt="Size">
 </p>
