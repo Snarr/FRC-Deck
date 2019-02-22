@@ -26,11 +26,16 @@ const connectAction = {
 			}
 			if (!ip || !port) {
 				this.ShowReaction(context, "Alert");
+				return
 			} else {
 				// this.ShowReaction(context, "Worked");
 				// robotSocket = new RobotSocket("10.16.40.2", 5802);
-				robotSocket = new WebSocket(`ws://${ip}:${port}/socket`);
-
+				try {
+					robotSocket = new WebSocket(`ws://${ip}:${port}/socket`);
+				} catch (err) {
+					this.ShowReaction(context, "Alert");
+					return
+				}
 				robotSocket.onopen = function (evt) {
 					robotSocketOn = true;
 					this.setState(1);
