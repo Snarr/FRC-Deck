@@ -94,7 +94,7 @@ const hotkeyAction = {
 
 	onKeyUp: function (context, settings, coordinates, userDesiredState) {
 		if (robotSocketOn) {
-			if (isNaN(settings.functionID)) {
+			if (isNaN(settings.actionID)) {
 				this.ShowReaction(context, "Alert");
 				return
 			}
@@ -146,18 +146,18 @@ const toggleAction = {
 			let data;
 			if (toggleActionState == 0) {
 				data = {
-					"functionID": settings["onFunctionID"]
+					"actionID": settings["onActionID"]
 				}
 				toggleActionState = 1;
 			} else {
 				data = {
-					"functionID": settings["offFunctionID"]
+					"actionID": settings["onActionID"]
 				}
 				toggleActionState = 0;
 			}
 			this.SetState(toggleActionState);
 
-			if (isNaN(data.functionID)) {
+			if (isNaN(data.actionID)) {
 				this.ShowReaction(context, "Alert");
 				return
 			}

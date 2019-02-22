@@ -26,11 +26,11 @@ function connectSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
                 return;
             }
 
-            const functionID = document.getElementById('functionID');
-            functionID.value = payload.functionID;
+            const actionID = document.getElementById('actionID');
+            actionID.value = payload.actionID;
 
-            if(functionID.value == "undefined") {
-				functionID.value = "";
+            if(actionID.value == "undefined") {
+				actionID.value = "";
             }
 
             const el = document.querySelector('.sdpi-wrapper');
@@ -60,8 +60,8 @@ function updateSettings() {
 
         payload.type = "updateSettings";
 
-        const functionID = document.getElementById('functionID');
-        payload.functionID = functionID.value;
+        const actionID = document.getElementById('actionID');
+        payload.actionID = actionID.value;
 
         console.log(payload);
         const json = {

@@ -26,15 +26,15 @@ function connectSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
                 return;
             }
 
-            const onFunctionID = document.getElementById('onFunctionID');
-			onFunctionID.value = payload.onFunctionID;
+            const onActionID = document.getElementById('onActionID');
+			onActionID.value = payload.onActionID;
 			
-            const offFunctionID = document.getElementById('offFunctionID');
-            offFunctionID.value = payload.offFunctionID;
+            const offActionID = document.getElementById('offActionID');
+            offActionID.value = payload.offActionID;
 
-            if(onFunctionID.value == "undefined" || offFunctionID.value == "undefined") {
-				onFunctionID.value = "";
-				offFunctionID.value = "";
+            if(onActionID.value == "undefined" || offActionID.value == "undefined") {
+				onActionID.value = "";
+				offActionID.value = "";
             }
 
             const el = document.querySelector('.sdpi-wrapper');
@@ -64,11 +64,11 @@ function updateSettings() {
 
         payload.type = "updateSettings";
 
-        const onFunctionID = document.getElementById('onFunctionID');
-		payload.onFunctionID = onFunctionID.value;
+        const onActionID = document.getElementById('onActionID');
+		payload.onActionID = onActionID.value;
 		
-		const offFunctionID = document.getElementById('offFunctionID');
-        payload.offFunctionID = offFunctionID.value;
+		const offActionID = document.getElementById('offActionID');
+        payload.offActionID = offActionID.value;
 
         console.log(payload);
         const json = {

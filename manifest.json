@@ -38,7 +38,7 @@
 		  }
 		], 
 		"SupportedInMultiActions": true,
-		"Tooltip": "Toggle on/off a robot function. Starts in off state.", 
+		"Tooltip": "Toggle on/off a robot action. Starts in off state.", 
 		"UUID": "com.team1640.toggle.action",
 		"PropertyInspectorPath": "actions/toggle/pi.html"
 	},
@@ -53,7 +53,7 @@
 		  }
 		], 
 		"SupportedInMultiActions": true,
-		"Tooltip": "Trigger a single event on the robot", 
+		"Tooltip": "Trigger a single action on the robot", 
 		"UUID": "com.team1640.hotkey.action",
 		"PropertyInspectorPath": "actions/hotkey/pi.html"
 	}
