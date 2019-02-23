@@ -13,7 +13,7 @@
 		<div class="sdpi-heading">SETTINGS</div>
 
 		<div class="sdpi-item" title="This field lets you enter an integer number that will correspond to an action in your robot code. Check the FRC Deck documentation for more details.">
-			<div class="sdpi-item-label">Task ID</div>
+			<div class="sdpi-item-label">Action ID</div>
 			<input
 			class="sdpi-item-value"
 			id="actionID"
@@ -28,6 +28,17 @@
 			onchange="updateSettings()"
 			required>
 		</div>
+
+		<div class="sdpi-heading">COLOR</div>
+		<div type="color" class="sdpi-item">
+            <div class="sdpi-item-label">Background Color</div>
+			<input
+			class="sdpi-item-value"
+			id="colorSelection"
+			value=""
+			type="color"
+			onchange="updateSettings()">
+        </div>
 	</div>
 </body>
 

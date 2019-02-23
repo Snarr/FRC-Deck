@@ -8,11 +8,6 @@
 			"Name": "Not Connected",
 			"Image": "actions/connect/images/noConnection",
 			"ShowTitle": false
-		},
-		{
-			"Name": "Not Connected",
-			"Image": "actions/connect/images/connection",
-			"ShowTitle": false
 		}
       ],
       "SupportedInMultiActions": false,
@@ -27,12 +22,6 @@
 		  {
 			"Image": "actions/toggle/images/toggleOff",
 			"Title": "OFF",
-			"TitleAlignment": "bottom", 
-			"FontSize": "16"
-		  },
-		  {
-			"Image": "actions/toggle/images/toggleOn",
-			"Title": "ON",
 			"TitleAlignment": "bottom", 
 			"FontSize": "16"
 		  }

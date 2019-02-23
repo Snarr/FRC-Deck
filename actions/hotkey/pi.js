@@ -27,7 +27,10 @@ function connectSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
             }
 
             const actionID = document.getElementById('actionID');
-            actionID.value = payload.actionID;
+			actionID.value = payload.actionID;
+			
+            const color = document.getElementById('colorSelection');
+            color.value = payload.color;
 
             if(actionID.value == "undefined") {
 				actionID.value = "";
@@ -61,7 +64,10 @@ function updateSettings() {
         payload.type = "updateSettings";
 
         const actionID = document.getElementById('actionID');
-        payload.actionID = actionID.value;
+		payload.actionID = actionID.value;
+		
+        const color = document.getElementById('colorSelection');
+        payload.color = color.value;
 
         console.log(payload);
         const json = {

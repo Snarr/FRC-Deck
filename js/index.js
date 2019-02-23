@@ -4,11 +4,14 @@ var settingsCache = {};
 
 let robotSocket;
 let robotSocketOn = false;
-let toggleActionState = 0;
+let toggleActionState = false;
 
 const connectAction = {
 
 	type: "com.team1640.connect.action",
+
+	onKeyDown: function (context, settings, coordinates, userDesiredState) {
+	},
 
 	onKeyUp: function (context, settings, coordinates, userDesiredState) {
 		if (robotSocketOn) {
@@ -24,25 +27,21 @@ const connectAction = {
 			if (settings['port'] != null || !settings['port'].includes(".") || settings['port'].parseInt != NaN) {
 				port = settings["port"];
 			}
+			
 			if (!ip || !port) {
 				this.ShowReaction(context, "Alert");
+				loadAndSetImage(context, "./actions/connect/images/noConnection@2x.png");
 				return
 			} else {
-				// this.ShowReaction(context, "Worked");
-				// robotSocket = new RobotSocket("10.16.40.2", 5802);
-				try {
-					robotSocket = new WebSocket(`ws://${ip}:${port}/socket`);
-				} catch (err) {
-					this.ShowReaction(context, "Alert");
-					return
-				}
+				robotSocket = new WebSocket(`ws://${ip}:${port}/`);
+
 				robotSocket.onopen = function (evt) {
+					loadAndSetImage(context, "./actions/connect/images/connection@2x.png");
 					robotSocketOn = true;
-					this.setState(1);
 				};
 				robotSocket.onclose = function (evt) {
+					loadAndSetImage(context, "./actions/connect/images/noConnection@2x.png");
 					robotSocketOn = false;
-					this.setState(0);
 				}
 			}
 		}
@@ -50,7 +49,7 @@ const connectAction = {
 
 	onWillAppear: function (context, settings, coordinates) {
 		settingsCache[context] = settings;
-		this.setState(0);
+		loadAndSetImage(context, "./actions/connect/images/noConnection@2x.png");
 	},
 
 	ShowReaction: function (context, type) {
@@ -97,13 +96,17 @@ const hotkeyAction = {
 
 	type: "com.team1640.hotkey.action",
 
+	onKeyDown: function (context, settings, coordinates, userDesiredState) {
+	},
+
 	onKeyUp: function (context, settings, coordinates, userDesiredState) {
 		if (robotSocketOn) {
-			if (isNaN(settings.actionID)) {
+			if (isNaN(settings.actionID) || settings.actionID == "") {
 				this.ShowReaction(context, "Alert");
 				return
+			} else {
+				robotSocket.send(JSON.stringify(settings));
 			}
-			robotSocket.send(JSON.stringify(settings));
 		} else {
 			this.ShowReaction(context, "Alert");
 		}
@@ -111,6 +114,7 @@ const hotkeyAction = {
 
 	onWillAppear: function (context, settings, coordinates) {
 		settingsCache[context] = settings;
+		loadAndSetImage(context, "./actions/hotkey/images/hotkey@2x.png", settings["color"]);
 	},
 
 	ShowReaction: function (context, type) {
@@ -146,27 +150,31 @@ const toggleAction = {
 
 	type: "com.team1640.toggle.action",
 
+	onKeyDown: function (context, settings, coordinates, userDesiredState) {
+	},
+
 	onKeyUp: function (context, settings, coordinates, userDesiredState) {
 		if (robotSocketOn) {
 			let data;
-			if (toggleActionState == 0) {
+			if (!toggleActionState) {
 				data = {
 					"actionID": settings["onActionID"]
 				}
-				toggleActionState = 1;
+				loadAndSetImage(context, "./actions/toggle/images/toggleOn@2x.png", settings["onColor"]);
+				this.SetTitle(context, "ON");
 			} else {
 				data = {
-					"actionID": settings["onActionID"]
+					"actionID": settings["offActionID"]
 				}
-				toggleActionState = 0;
+				loadAndSetImage(context, "./actions/toggle/images/toggleOff@2x.png", settings["offColor"]);
+				this.SetTitle(context, "OFF");
 			}
-			this.SetState(toggleActionState);
 
 			if (isNaN(data.actionID)) {
 				this.ShowReaction(context, "Alert");
 				return
 			}
-			robotSocket.send(data);
+			robotSocket.send(JSON.stringify(data));
 			toggleActionState = !toggleActionState;
 		} else {
 			this.ShowReaction(context, "Alert");
@@ -175,7 +183,7 @@ const toggleAction = {
 
 	onWillAppear: function (context, settings, coordinates) {
 		settingsCache[context] = settings;
-		this.SetState(context, 0);
+		loadAndSetImage(context, "./actions/toggle/images/toggleOff@2x.png", settings["offColor"]);
 	},
 
 	ShowReaction: function (context, type) {
@@ -203,6 +211,17 @@ const toggleAction = {
 				"state": state
 			}
 		}
+		websocket.send(JSON.stringify(json));
+	},
+
+	SetTitle: function (context, title) {
+		const json = {
+			"event": "setTitle",
+			"context": context,
+			"payload": {
+				"title": title
+			}
+		};
 		websocket.send(JSON.stringify(json));
 	},
 
@@ -263,6 +282,13 @@ function connectSocket(inPort, inPluginUUID, inRegisterEvent, inInfo) {
 
 		if (selectedAction == undefined) {
 			return
+		}
+
+		if (event == "keyDown") {
+			const settings = jsonPayload['settings'];
+			const coordinates = jsonPayload['coordinates'];
+			const userDesiredState = jsonPayload['userDesiredState'];
+			selectedAction.onKeyDown(context, settings, coordinates, userDesiredState);
 		}
 
 		if (event == "keyUp") {

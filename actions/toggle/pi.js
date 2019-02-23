@@ -30,7 +30,13 @@ function connectSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
 			onActionID.value = payload.onActionID;
 			
             const offActionID = document.getElementById('offActionID');
-            offActionID.value = payload.offActionID;
+			offActionID.value = payload.offActionID;
+			
+			const onColor = document.getElementById('onColorSelection');
+			onColor.value = payload.onColor;
+			
+			const offColor = document.getElementById('offColorSelection');
+            offColor.value = payload.offColor;
 
             if(onActionID.value == "undefined" || offActionID.value == "undefined") {
 				onActionID.value = "";
@@ -68,7 +74,13 @@ function updateSettings() {
 		payload.onActionID = onActionID.value;
 		
 		const offActionID = document.getElementById('offActionID');
-        payload.offActionID = offActionID.value;
+		payload.offActionID = offActionID.value;
+		
+        const onColor = document.getElementById('onColorSelection');
+		payload.onColor = onColor.value;
+		
+        const offColor = document.getElementById('offColorSelection');
+        payload.offColor = offColor.value;
 
         console.log(payload);
         const json = {
