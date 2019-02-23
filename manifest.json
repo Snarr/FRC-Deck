@@ -55,7 +55,7 @@
   "CategoryIcon": "images/categoryIcon",
   "Icon": "images/pluginIcon",
   "URL": "http://team1640.com",
-  "Version": "0.3.0",
+  "Version": "1.0.0",
   "OS": [
     {
       "Platform": "mac",
