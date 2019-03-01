@@ -16,7 +16,7 @@ const connectAction = {
 	onKeyUp: function (context, settings, coordinates, userDesiredState) {
 		if (robotSocketOn) {
 			robotSocket.close();
-			this.SetState(context, 0);
+			sdUtilities.SetState(context, 0);
 		} else {
 			let ip = "";
 			let port = "";
@@ -29,7 +29,7 @@ const connectAction = {
 			}
 			
 			if (!ip || !port) {
-				this.ShowReaction(context, "Alert");
+				sdUtilities.ShowReaction(context, "Alert");
 				loadAndSetImage(context, "./actions/connect/images/noConnection@2x.png");
 				return
 			} else {
@@ -50,45 +50,6 @@ const connectAction = {
 	onWillAppear: function (context, settings, coordinates) {
 		settingsCache[context] = settings;
 		loadAndSetImage(context, "./actions/connect/images/noConnection@2x.png");
-	},
-
-	ShowReaction: function (context, type) {
-		const json = {
-			"event": "show" + type,
-			"context": context,
-		};
-		websocket.send(JSON.stringify(json));
-	},
-
-	SetSettings: function (context, settings) {
-		const json = {
-			"event": "setSettings",
-			"context": context,
-			"payload": settings
-		};
-		websocket.send(JSON.stringify(json));
-	},
-
-	SetState: function (context, state) {
-		const json = {
-			"event": "setState",
-			"context": context,
-			"payload": {
-				"state": state
-			}
-		}
-		websocket.send(JSON.stringify(json));
-	},
-
-	SendSettings: function (action, context) {
-		const json = {
-			"action": action,
-			"event": "sendToPropertyInspector",
-			"context": context,
-			"payload": settingsCache[context]
-		};
-
-		websocket.send(JSON.stringify(json));
 	}
 };
 
@@ -102,47 +63,19 @@ const hotkeyAction = {
 	onKeyUp: function (context, settings, coordinates, userDesiredState) {
 		if (robotSocketOn) {
 			if (isNaN(settings.actionID) || settings.actionID == "") {
-				this.ShowReaction(context, "Alert");
+				sdUtilities.ShowReaction(context, "Alert");
 				return
 			} else {
 				robotSocket.send(JSON.stringify(settings));
 			}
 		} else {
-			this.ShowReaction(context, "Alert");
+			sdUtilities.ShowReaction(context, "Alert");
 		}
 	},
 
 	onWillAppear: function (context, settings, coordinates) {
 		settingsCache[context] = settings;
 		loadAndSetImage(context, "./actions/hotkey/images/hotkey@2x.png", settings["color"]);
-	},
-
-	ShowReaction: function (context, type) {
-		const json = {
-			"event": "show" + type,
-			"context": context,
-		};
-		websocket.send(JSON.stringify(json));
-	},
-
-	SetSettings: function (context, settings) {
-		const json = {
-			"event": "setSettings",
-			"context": context,
-			"payload": settings
-		};
-		websocket.send(JSON.stringify(json));
-	},
-
-	SendSettings: function (action, context) {
-		const json = {
-			"action": action,
-			"event": "sendToPropertyInspector",
-			"context": context,
-			"payload": settingsCache[context]
-		};
-
-		websocket.send(JSON.stringify(json));
 	}
 };
 
@@ -161,79 +94,29 @@ const toggleAction = {
 					"actionID": settings["onActionID"]
 				}
 				loadAndSetImage(context, "./actions/toggle/images/toggleOn@2x.png", settings["onColor"]);
-				this.SetTitle(context, "ON");
+				sdUtilities.SetTitle(context, "ON");
 			} else {
 				data = {
 					"actionID": settings["offActionID"]
 				}
 				loadAndSetImage(context, "./actions/toggle/images/toggleOff@2x.png", settings["offColor"]);
-				this.SetTitle(context, "OFF");
+				sdUtilities.SetTitle(context, "OFF");
 			}
 
 			if (isNaN(data.actionID)) {
-				this.ShowReaction(context, "Alert");
+				sdUtilities.ShowReaction(context, "Alert");
 				return
 			}
 			robotSocket.send(JSON.stringify(data));
 			toggleActionState = !toggleActionState;
 		} else {
-			this.ShowReaction(context, "Alert");
+			sdUtilities.ShowReaction(context, "Alert");
 		}
 	},
 
 	onWillAppear: function (context, settings, coordinates) {
 		settingsCache[context] = settings;
 		loadAndSetImage(context, "./actions/toggle/images/toggleOff@2x.png", settings["offColor"]);
-	},
-
-	ShowReaction: function (context, type) {
-		const json = {
-			"event": "show" + type,
-			"context": context,
-		};
-		websocket.send(JSON.stringify(json));
-	},
-
-	SetSettings: function (context, settings) {
-		const json = {
-			"event": "setSettings",
-			"context": context,
-			"payload": settings
-		};
-		websocket.send(JSON.stringify(json));
-	},
-
-	SetState: function (context, state) {
-		const json = {
-			"event": "setState",
-			"context": context,
-			"payload": {
-				"state": state
-			}
-		}
-		websocket.send(JSON.stringify(json));
-	},
-
-	SetTitle: function (context, title) {
-		const json = {
-			"event": "setTitle",
-			"context": context,
-			"payload": {
-				"title": title
-			}
-		};
-		websocket.send(JSON.stringify(json));
-	},
-
-	SendSettings: function (action, context) {
-		const json = {
-			"action": action,
-			"event": "sendToPropertyInspector",
-			"context": context,
-			"payload": settingsCache[context]
-		};
-
-		websocket.send(JSON.stringify(json));
 	}
 };
 
@@ -306,12 +189,12 @@ function connectSocket(inPort, inPluginUUID, inRegisterEvent, inInfo) {
 
 			if (jsonPayload['type'] == "updateSettings") {
 
-				selectedAction.SetSettings(context, jsonPayload);
+				sdUtilities.SetSettings(context, jsonPayload);
 				settingsCache[context] = jsonPayload;
 
 			} else if (jsonPayload['type'] == "requestSettings") {
 
-				selectedAction.SendSettings(action, context);
+				sdUtilities.SendSettings(action, context);
 			}
 		}
 	};
